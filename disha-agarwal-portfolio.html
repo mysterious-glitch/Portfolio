@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Disha Agarwal — Cyber Security × UX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B1220;
+    --ink-2:#121B2E;
+    --paper:#F7F5F0;
+    --paper-2:#EFEBE1;
+    --amber:#E8A33D;
+    --violet:#8B7FD8;
+    --slate:#5B6472;
+    --line:#DDD8CC;
+    --line-dark:#26324A;
+    --white:#FFFFFF;
+    --font-display:'Space Grotesk', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+    --font-body:'Inter', sans-serif;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  html{scroll-behavior:smooth;}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--amber); color:var(--ink);}
+
+  :focus-visible{
+    outline:2px solid var(--violet);
+    outline-offset:3px;
+  }
+
+  .tag{
+    font-family:var(--font-mono);
+    font-size:0.72rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    display:inline-flex;
+    align-items:center;
+    gap:0.5em;
+    color:var(--slate);
+  }
+  .tag::before{
+    content:'';
+    width:6px;height:6px;
+    background:var(--amber);
+    border-radius:50%;
+    display:inline-block;
+    box-shadow:0 0 0 3px rgba(232,163,61,0.18);
+  }
+
+  /* ===== NAV ===== */
+  nav{
+    position:fixed;
+    top:0; left:0; right:0;
+    z-index:100;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:1.1rem 5%;
+    background:rgba(11,18,32,0.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line-dark);
+  }
+  .nav-logo{
+    font-family:var(--font-mono);
+    color:var(--paper);
+    font-size:0.9rem;
+    letter-spacing:0.05em;
+  }
+  .nav-logo span{color:var(--amber);}
+  .nav-links{
+    display:flex;
+    gap:2rem;
+    list-style:none;
+  }
+  .nav-links a{
+    font-family:var(--font-mono);
+    font-size:0.75rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:#C7CEDA;
+    position:relative;
+    padding-bottom:4px;
+    transition:color 0.2s;
+  }
+  .nav-links a:hover{color:var(--amber);}
+  .nav-links a::after{
+    content:'';
+    position:absolute;
+    left:0; bottom:0;
+    width:0; height:1px;
+    background:var(--amber);
+    transition:width 0.25s ease;
+  }
+  .nav-links a:hover::after{width:100%;}
+  .nav-toggle{display:none;}
+
+  @media (max-width:800px){
+    .nav-links{
+      position:fixed;
+      top:56px; right:0;
+      background:var(--ink-2);
+      flex-direction:column;
+      gap:0;
+      width:210px;
+      transform:translateX(100%);
+      transition:transform 0.3s ease;
+      border-left:1px solid var(--line-dark);
+      border-bottom:1px solid var(--line-dark);
+    }
+    .nav-links.open{transform:translateX(0);}
+    .nav-links li{border-bottom:1px solid var(--line-dark);}
+    .nav-links a{display:block; padding:1rem 1.2rem;}
+    .nav-toggle{
+      display:block;
+      background:none; border:none;
+      color:var(--paper);
+      font-family:var(--font-mono);
+      font-size:1.3rem;
+      cursor:pointer;
+    }
+  }
+
+  /* ===== HERO ===== */
+  .hero{
+    min-height:92vh;
+    background:var(--ink);
+    color:var(--paper);
+    position:relative;
+    display:flex;
+    align-items:center;
+    padding:6rem 5% 3rem;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background-image:
+      linear-gradient(rgba(232,163,61,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(232,163,61,0.05) 1px, transparent 1px);
+    background-size:42px 42px;
+    mask-image:radial-gradient(ellipse 80% 60% at 70% 30%, black, transparent);
+  }
+  .hero-inner{
+    position:relative;
+    z-index:2;
+    max-width:920px;
+  }
+  .terminal-line{
+    font-family:var(--font-mono);
+    font-size:0.85rem;
+    color:var(--amber);
+    margin-bottom:1.4rem;
+    display:flex;
+    align-items:center;
+    min-height:1.2em;
+  }
+  .terminal-line .prompt{color:#6BE0C7; margin-right:0.6em;}
+  .caret{
+    display:inline-block;
+    width:8px; height:1.05em;
+    background:var(--amber);
+    margin-left:2px;
+    animation:blink 1s step-end infinite;
+    vertical-align:text-bottom;
+  }
+  @keyframes blink{50%{opacity:0;}}
+
+  .hero h1{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(2.6rem, 6vw, 4.6rem);
+    line-height:1.04;
+    letter-spacing:-0.01em;
+    margin-bottom:1.1rem;
+  }
+  .hero h1 .accent{color:var(--amber);}
+  .hero h1 .accent2{color:var(--violet);}
+
+  .hero p.sub{
+    font-size:1.08rem;
+    color:#C7CEDA;
+    max-width:560px;
+    margin-bottom:2.2rem;
+  }
+
+  .hero-cta{
+    display:flex;
+    gap:1rem;
+    flex-wrap:wrap;
+    margin-bottom:2.6rem;
+  }
+  .btn{
+    font-family:var(--font-mono);
+    font-size:0.8rem;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    padding:0.85rem 1.6rem;
+    border-radius:3px;
+    border:1px solid transparent;
+    cursor:pointer;
+    transition:all 0.2s ease;
+    display:inline-block;
+  }
+  .btn-primary{
+    background:var(--amber);
+    color:var(--ink);
+  }
+  .btn-primary:hover{background:#f2b658; transform:translateY(-2px);}
+  .btn-ghost{
+    border-color:var(--line-dark);
+    color:var(--paper);
+  }
+  .btn-ghost:hover{border-color:var(--amber); color:var(--amber); transform:translateY(-2px);}
+
+  .hero-meta{
+    display:flex;
+    gap:2.4rem;
+    flex-wrap:wrap;
+    font-family:var(--font-mono);
+    font-size:0.78rem;
+    color:#8b95a7;
+  }
+  .hero-meta a:hover{color:var(--amber);}
+
+  .hero-visual{
+    position:absolute;
+    right:6%;
+    top:50%;
+    transform:translateY(-50%);
+    width:320px; height:320px;
+    z-index:1;
+    opacity:0.9;
+  }
+  .hero-visual .ring{
+    position:absolute;
+    border:1px solid rgba(232,163,61,0.25);
+    border-radius:50%;
+    inset:0;
+  }
+  .hero-visual .ring2{inset:38px; border-color:rgba(139,127,216,0.28);}
+  .hero-visual .ring3{inset:76px; border-color:rgba(232,163,61,0.35); animation:spin 14s linear infinite;}
+  .hero-visual .ring3::before{
+    content:'';
+    position:absolute;
+    top:-3px; left:50%;
+    width:6px; height:6px;
+    background:var(--amber);
+    border-radius:50%;
+    box-shadow:0 0 10px 2px rgba(232,163,61,0.6);
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .hero-visual .core{
+    position:absolute;
+    inset:118px;
+    border-radius:50%;
+    background:linear-gradient(145deg, rgba(232,163,61,0.14), rgba(139,127,216,0.14));
+    border:1px solid var(--line-dark);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .hero-visual svg{width:38px; height:38px;}
+  @media (max-width:1000px){
+    .hero-visual{display:none;}
+  }
+
+  /* ===== SECTION SCAFFOLD ===== */
+  .section-band{
+    position:relative;
+    background-image:
+      linear-gradient(rgba(11,18,32,0.028) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(11,18,32,0.028) 1px, transparent 1px);
+    background-size:38px 38px;
+    background-position:center top;
+  }
+  .section-band.tint{background-color:var(--paper-2);}
+  .section-band::before{
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0;
+    height:1px;
+    background:var(--line);
+  }
+  section{
+    padding:4.6rem 5%;
+    max-width:1180px;
+    margin:0 auto;
+    position:relative;
+  }
+  .section-head{
+    margin-bottom:2.6rem;
+    max-width:640px;
+    position:relative;
+  }
+  .section-head .watermark{
+    position:absolute;
+    top:-2.4rem; right:0;
+    font-family:var(--font-mono);
+    font-size:5.2rem;
+    font-weight:600;
+    color:rgba(11,18,32,0.05);
+    line-height:1;
+    user-select:none;
+    pointer-events:none;
+  }
+  .section-head h2{
+    font-family:var(--font-display);
+    font-size:clamp(1.8rem, 3.4vw, 2.6rem);
+    font-weight:600;
+    margin-top:0.6rem;
+    letter-spacing:-0.01em;
+  }
+  .reveal{
+    opacity:0;
+    transform:translateY(24px);
+    transition:opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.in{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  /* ===== ABOUT ===== */
+  .about-grid{
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+    gap:3.5rem;
+    align-items:start;
+  }
+  .about-grid p{color:var(--slate); font-size:1.02rem; margin-bottom:1.1rem;}
+  .id-card{
+    background:var(--ink);
+    color:var(--paper);
+    border-radius:10px;
+    padding:1.8rem;
+    position:relative;
+    overflow:hidden;
+    border:1px solid var(--line-dark);
+  }
+  .id-card::after{
+    content:'ACCESS · GRANTED';
+    position:absolute;
+    top:12px; right:-38px;
+    background:var(--amber);
+    color:var(--ink);
+    font-family:var(--font-mono);
+    font-size:0.62rem;
+    letter-spacing:0.1em;
+    padding:3px 44px;
+    transform:rotate(35deg);
+    font-weight:600;
+  }
+  .id-card h3{
+    font-family:var(--font-mono);
+    font-size:0.72rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--amber);
+    margin-bottom:1rem;
+  }
+  .id-row{
+    display:flex;
+    justify-content:space-between;
+    padding:0.55rem 0;
+    border-bottom:1px solid var(--line-dark);
+    font-size:0.85rem;
+  }
+  .id-row:last-child{border-bottom:none;}
+  .id-row span:first-child{color:#8b95a7;}
+  @media (max-width:800px){
+    .about-grid{grid-template-columns:1fr;}
+  }
+
+  /* ===== SKILLS ===== */
+  .skills-wrap{
+    display:grid;
+    grid-template-columns:1.4fr 1fr;
+    gap:3rem;
+  }
+  .skill-block h3{
+    font-family:var(--font-mono);
+    font-size:0.75rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--violet);
+    margin-bottom:1.2rem;
+  }
+  .chip-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:0.6rem;
+  }
+  .chip{
+    font-family:var(--font-mono);
+    font-size:0.78rem;
+    padding:0.5rem 0.9rem;
+    border:1px solid var(--line);
+    border-radius:20px;
+    background:var(--white);
+    color:var(--ink);
+    transition:all 0.2s;
+  }
+  .chip:hover{border-color:var(--amber); background:#fdf6ea;}
+  .soft-list{
+    list-style:none;
+    display:grid;
+    grid-template-columns:1fr ;
+    gap:0.6rem 1.2rem;
+  }
+  .soft-list li{
+    font-size:0.92rem;
+    color:var(--slate);
+    padding-left:1.1rem;
+    position:relative;
+  }
+  .soft-list li::before{
+    content:'—';
+    position:absolute; left:0;
+    color:var(--violet);
+  }
+  @media (max-width:800px){
+    .skills-wrap{grid-template-columns:1fr;}
+  }
+
+  /* ===== PROJECTS ===== */
+  .project-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:1.4rem;
+  }
+  .project-card{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:1.8rem;
+    position:relative;
+    transition:transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+  .project-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 18px 40px -20px rgba(11,18,32,0.25);
+    border-color:var(--violet);
+  }
+  .project-card .idx{
+    font-family:var(--font-mono);
+    font-size:0.72rem;
+    color:var(--amber);
+    letter-spacing:0.1em;
+  }
+  .project-card h3{
+    font-family:var(--font-display);
+    font-size:1.25rem;
+    margin:0.6rem 0 0.7rem;
+  }
+  .project-card p{
+    color:var(--slate);
+    font-size:0.92rem;
+  }
+  .stack-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:0.5rem;
+    margin-top:1.2rem;
+    padding-top:1rem;
+    border-top:1px solid var(--line);
+  }
+  .stack-row span{
+    font-family:var(--font-mono);
+    font-size:0.68rem;
+    letter-spacing:0.04em;
+    color:var(--violet);
+    background:rgba(139,127,216,0.08);
+    padding:0.28rem 0.6rem;
+    border-radius:4px;
+  }
+  @media (max-width:800px){
+    .project-grid{grid-template-columns:1fr;}
+  }
+
+  /* ===== TIMELINE (Academic) ===== */
+  .timeline{
+    position:relative;
+    padding-left:2.2rem;
+  }
+  .timeline::before{
+    content:'';
+    position:absolute;
+    left:6px; top:6px; bottom:6px;
+    width:1px;
+    background:var(--line);
+  }
+  .t-item{
+    position:relative;
+    margin-bottom:2.2rem;
+  }
+  .t-item:last-child{margin-bottom:0;}
+  .t-item::before{
+    content:'';
+    position:absolute;
+    left:-2.2rem;
+    top:4px;
+    width:11px; height:11px;
+    border-radius:50%;
+    background:var(--paper);
+    border:2px solid var(--amber);
+  }
+  .t-year{
+    font-family:var(--font-mono);
+    font-size:0.75rem;
+    color:var(--amber);
+    letter-spacing:0.06em;
+  }
+  .t-item h3{
+    font-family:var(--font-display);
+    font-size:1.15rem;
+    margin:0.3rem 0 0.15rem;
+  }
+  .t-item p{color:var(--slate); font-size:0.92rem;}
+
+  /* ===== CERT + ACHIEVEMENTS ===== */
+  .two-col{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:3rem;
+  }
+  @media (max-width:800px){
+    .two-col{grid-template-columns:1fr;}
+  }
+  .cert-list{list-style:none;}
+  .cert-list li{
+    display:flex;
+    align-items:baseline;
+    gap:0.8rem;
+    padding:0.9rem 0;
+    border-bottom:1px solid var(--line);
+    font-size:0.95rem;
+  }
+  .cert-list li:first-child{padding-top:0;}
+  .cert-list .num{
+    font-family:var(--font-mono);
+    font-size:0.75rem;
+    color:var(--violet);
+    flex-shrink:0;
+  }
+
+  .ach-card{
+    background:var(--paper-2);
+    border-radius:10px;
+    padding:1.4rem 1.6rem;
+    margin-bottom:1rem;
+  }
+  .ach-card:last-child{margin-bottom:0;}
+  .ach-card .tag{margin-bottom:0.5rem;}
+  .ach-card h3{
+    font-family:var(--font-display);
+    font-size:1.05rem;
+    margin-bottom:0.4rem;
+  }
+  .ach-card p{font-size:0.9rem; color:var(--slate);}
+
+  /* ===== EXTRA / LANG / HOBBIES ===== */
+  .misc-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1.6rem;
+  }
+  @media (max-width:800px){
+    .misc-grid{grid-template-columns:1fr;}
+  }
+  .misc-card{
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:1.6rem;
+  }
+  .misc-card h3{
+    font-family:var(--font-mono);
+    font-size:0.72rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--slate);
+    margin-bottom:1rem;
+  }
+  .misc-card ul{list-style:none; font-size:0.92rem;}
+  .misc-card li{padding:0.35rem 0;}
+
+  /* ===== FOOTER / CONTACT ===== */
+  footer{
+    background:var(--ink);
+    color:var(--paper);
+    padding:5rem 5% 3rem;
+  }
+  .footer-inner{
+    max-width:1180px;
+    margin:0 auto;
+  }
+  footer h2{
+    font-family:var(--font-display);
+    font-size:clamp(2rem, 5vw, 3.2rem);
+    margin-bottom:1.5rem;
+    max-width:700px;
+  }
+  footer h2 .accent{color:var(--amber);}
+  .contact-links{
+    display:flex;
+    gap:2.2rem;
+    flex-wrap:wrap;
+    margin-bottom:3rem;
+  }
+  .contact-links a{
+    font-family:var(--font-mono);
+    font-size:0.9rem;
+    color:#C7CEDA;
+    border-bottom:1px solid transparent;
+    padding-bottom:2px;
+    transition:all 0.2s;
+  }
+  .contact-links a:hover{color:var(--amber); border-color:var(--amber);}
+  .footer-bottom{
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:1rem;
+    padding-top:2rem;
+    border-top:1px solid var(--line-dark);
+    font-family:var(--font-mono);
+    font-size:0.75rem;
+    color:#6b7789;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">disha<span>_</span>agarwal</div>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#academics">Academics</a></li>
+    <li><a href="#achievements">Achievements</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="terminal-line"><span class="prompt">disha@portfolio:~$</span><span id="typeTarget"></span><span class="caret"></span></div>
+    <h1>Securing systems.<br>Designing <span class="accent">experiences</span><br>that people <span class="accent2">trust</span>.</h1>
+    <p class="sub">B.Tech Cyber Security student at Parul University, learning to think like an attacker and build like a designer — bridging threat detection with clean, human-centred UI/UX.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#projects">View Projects</a>
+      <a class="btn btn-ghost" href="#contact">Get In Touch</a>
+    </div>
+    <div class="hero-meta">
+      <span>📍 Bikaner, Rajasthan</span>
+      <a href="mailto:dishaag827@gmail.com">✉ dishaag827@gmail.com</a>
+      <a href="https://www.linkedin.com/in/disha-agarwal-a4717b290" target="_blank" rel="noopener">in/disha-agarwal</a>
+    </div>
+  </div>
+  <!-- <div class="hero-visual" aria-hidden="true">
+    <div class="ring"></div>
+    <div class="ring ring2"></div>
+    <div class="ring ring3"></div>
+    <div class="core">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#E8A33D" stroke-width="1.4">
+        <path d="M12 2 L20 5.5 V11 C20 16 16.5 19.8 12 22 C7.5 19.8 4 16 4 11 V5.5 Z" />
+        <path d="M9 12 L11 14 L15.5 9.2" stroke="#8B7FD8" />
+      </svg>
+    </div>
+  </div> -->
+</header>
+
+<section id="about">
+  <div class="section-head reveal">
+    <span class="watermark">01</span>
+    <span class="tag">01 / Profile</span>
+    <h2>About me</h2>
+  </div>
+  <div class="about-grid">
+    <div class="reveal">
+      <p>I'm a Cyber Security undergraduate who got curious about the other side of the screen — how a secure system can also feel simple and pleasant to use. That curiosity pulled me toward Figma, Canva and front-end basics alongside penetration-testing concepts and threat modelling.</p>
+      <p>My projects usually sit at that intersection: a phishing-detection tool that needed a clear alerting flow, a civic-reporting concept that needed transparent status tracking, an emergency device concept that needed to work under pressure with almost no interface at all.</p>
+      <p>I'm currently exploring the Innovation and Management Programme at Bern University of Applied Sciences, Switzerland (2026), and looking for opportunities where security thinking and design thinking can work in the same room.</p>
+    </div>
+    <div class="id-card reveal">
+      <h3>Profile Snapshot</h3>
+      <div class="id-row"><span>Program</span><span>B.Tech · Cyber Security</span></div>
+      <div class="id-row"><span>Institution</span><span>Parul University</span></div>
+      <div class="id-row"><span>Status</span><span>2023 – Present</span></div>
+      <div class="id-row"><span>Focus</span><span>Security + UI/UX</span></div>
+      <div class="id-row"><span>Languages</span><span>Hindi, English</span></div>
+      <div class="id-row"><span>Based in</span><span>Bikaner, Rajasthan</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="section-band tint">
+<section id="skills">
+  <div class="section-head reveal">
+    <span class="watermark">02</span>
+    <span class="tag">02 / Toolkit</span>
+    <h2>Skills</h2>
+  </div>
+  <div class="skills-wrap">
+    <div>
+      <div class="skill-block reveal" style="margin-bottom:1.6rem;">
+        <h3>Technical</h3>
+        <div class="chip-row">
+          <span class="chip">Java</span>
+          <span class="chip">Python</span>
+          <span class="chip">C / C++</span>
+          <span class="chip">SQL</span>
+          <span class="chip">HTML</span>
+          <span class="chip">CSS</span>
+          <span class="chip">JavaScript</span>
+          <span class="chip">Git / GitHub</span>
+        </div>
+      </div>
+      <div class="skill-block reveal" style="margin-bottom:1.6rem;">
+        <h3>Design</h3>
+        <div class="chip-row">
+          <span class="chip">Figma</span>
+          <span class="chip">Canva</span>
+          <span class="chip">Inkscape</span>
+          <span class="chip">Microsoft Suite</span>
+          <span class="chip">Adobe Illustrator</span>
+          <span class="chip">Adobe Photoshop</span>
+        </div>
+      </div>
+      <div class="skill-block reveal">
+        <h3>Cyber Security</h3>
+        <div class="chip-row">
+          <span class="chip">Wireshark</span>
+          <span class="chip">Ncap</span>
+          <span class="chip">Burp Suite</span>
+          <span class="chip">Metasploit</span>
+          <span class="chip">Cisco Packet Tracer</span>
+          <span class="chip">FTK imager</span>
+          <span class="chip">Autopsy</span>
+        </div>
+      </div>
+    </div>
+    <div class="skill-block reveal">
+      <h3>How I work</h3>
+      <ul class="soft-list">
+        <li>Team collaboration</li>
+        <li>Problem-solving</li>
+        <li>Communication</li>
+        <li>Critical thinking</li>
+        <li>Adaptability</li>
+        <li>Attention to detail</li>
+        <li>Creativity</li>
+        <li>Calm under pressure</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</div>
+
+<section id="projects">
+  <div class="section-head reveal">
+    <span class="watermark">03</span>
+    <span class="tag">03 / Selected Work</span>
+    <h2>Projects</h2>
+  </div>
+  <div class="project-grid">
+    <div class="project-card reveal">
+      <span class="idx">DEFENSE</span>
+      <h3>DarkHook Defense</h3>
+      <p>Implemented threat detection logic and a security validation mechanism to improve detection accuracy and reduce phishing risks.</p>
+      <div class="stack-row"><span>Threat Detection</span><span>Phishing Analysis</span></div>
+    </div>
+    <div class="project-card reveal">
+      <span class="idx">HARDWARE CONCEPT</span>
+      <h3>SignalOne</h3>
+      <p>Designed a portable emergency device concept with satellite-based location tracking, cutting reliance on smartphones when it matters most.</p>
+      <div class="stack-row"><span>Product Concept</span><span>Satellite GPS</span></div>
+    </div>
+    <div class="project-card reveal">
+      <span class="idx">CIVIC TECH</span>
+      <h3>Smart Civic Issue Reporting System</h3>
+      <p>A real-time complaint reporting concept with GPS tagging and status tracking, built to improve transparency in civic issue resolution.</p>
+      <div class="stack-row"><span>GPS Tagging</span><span>Status Tracking</span></div>
+    </div>
+    <div class="project-card reveal">
+      <span class="idx">THREAT ANALYSIS</span>
+      <h3>Drive-by Download Attack</h3>
+      <p>Analyzed web-based attack traffic and exploitation techniques, then proposed preventive measures to mitigate similar threats.</p>
+      <div class="stack-row"><span>Traffic Analysis</span><span>Network Monitoring</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="section-band tint">
+<section id="academics">
+  <div class="section-head reveal">
+    <span class="watermark">04</span>
+    <span class="tag">04 / Academic Path</span>
+    <h2>Education</h2>
+  </div>
+  <div class="timeline">
+    <div class="t-item reveal">
+      <span class="t-year">2023 – 2027 (Expected) </span>
+      <h3>B.Tech, Computer Science — Cyber Security</h3>
+      <p>Parul University</p>
+    </div>
+    <div class="t-item reveal">
+      <span class="t-year">2026</span>
+      <h3>Innovation and Management Programme</h3>
+      <p>Bern University of Applied Sciences, Switzerland</p>
+    </div>
+    <div class="t-item reveal">
+      <span class="t-year">2022 – 2023</span>
+      <h3>12th Grade · Science (Maths), CBSE</h3>
+      <p>Sophia Senior Secondary School</p>
+    </div>
+    <div class="t-item reveal">
+      <span class="t-year">2020 – 2021</span>
+      <h3>10th Grade, CBSE</h3>
+      <p>Sophia Senior Secondary School</p>
+    </div>
+  </div>
+</section>
+</div>
+
+<section id="achievements">
+  <div class="section-head reveal">
+    <span class="watermark">05</span>
+    <span class="tag">05 / Certifications &amp; Achievements</span>
+    <h2>Recognition</h2>
+  </div>
+  <div class="two-col">
+    <div class="reveal">
+      <h3 style="font-family:var(--font-mono); font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--violet); margin-bottom:1.2rem;">Certifications</h3>
+      <ul class="cert-list">
+        <li><span class="num">01</span> 3D Printing and Laser Cutting</li>
+        <li><span class="num">02</span> AI Fundamentals with IBM SkillsBuild</li>
+        <li><span class="num">03</span> Cyber Security and Ethical Hacking</li>
+        <li><span class="num">04</span> Frontend Web Designing</li>
+      </ul>
+    </div>
+    <div class="reveal">
+      <h3 style="font-family:var(--font-mono); font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--violet); margin-bottom:1.2rem;">Achievements</h3>
+      <div class="ach-card">
+        <span class="tag">Hack Overflow · Team Event</span>
+        <h3>Pillai HOC College of Engg. &amp; Tech, Panvel</h3>
+        <p>Built a dynamic website for university students around the theme "Dynamic World."</p>
+      </div>
+      <div class="ach-card">
+        <span class="tag">Toycathon · Finalist</span>
+        <h3>PIERC</h3>
+        <p>Developed a working game prototype showcasing traditions across Indian states.</p>
+      </div>
+      <div class="ach-card">
+        <span class="tag">CDC Fest · Parul University</span>
+        <h3>Writing, Reading &amp; Speaking Competitions</h3>
+        <p>Pre-finalist in Writing (2024–25); Semi-finalist in Reading (2024–25) and in Speaking &amp; Listening (2023–24).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-band tint">
+<section id="extra">
+  <div class="section-head reveal">
+    <span class="watermark">06</span>
+    <span class="tag">06 / Beyond the Syllabus</span>
+    <h2>Extracurricular &amp; Interests</h2>
+  </div>
+  <div class="misc-grid">
+    <div class="misc-card reveal">
+      <h3>Workshops &amp; Talks</h3>
+      <ul>
+        <li>UI/UX Seminar — GDSC</li>
+        <li>Blockchain Simplified: Key Concepts — Chain Innovators Club</li>
+        <li>Diving Deep in Cyber Security — NULL Community</li>
+      </ul>
+    </div>
+    <div class="misc-card reveal">
+      <h3>Languages</h3>
+      <ul>
+        <li>Hindi</li>
+        <li>English</li>
+      </ul>
+    </div>
+    <div class="misc-card reveal">
+      <h3>Hobbies</h3>
+      <ul>
+        <li>Travelling</li>
+        <li>Reading books</li>
+        <li>Painting</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</div>
+
+<footer id="contact">
+  <div class="footer-inner">
+    <span class="tag" style="color:#8b95a7;">07 / Let's Connect</span>
+    <h2 style="margin-top:1rem;">Open to internships and roles where <span class="accent">security</span> meets <span class="accent">design</span>.</h2>
+    <div class="contact-links">
+      <a href="mailto:dishaag827@gmail.com">dishaag827@gmail.com</a>
+      <a href="tel:+916377892199">+91 6377892199</a>
+      <a href="https://www.linkedin.com/in/disha-agarwal-a4717b290" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Disha Agarwal</span>
+      <span>Bikaner, Rajasthan, India</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile nav toggle
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, {threshold:0.15});
+  reveals.forEach(el => io.observe(el));
+
+  // Terminal typing effect
+  const typeTarget = document.getElementById('typeTarget');
+  const lines = ['whoami', 'cat objectives.txt', 'status: learning & building'];
+  let li = 0, ci = 0, deleting = false;
+
+  function typeLoop(){
+    const current = lines[li];
+    if(!deleting){
+      typeTarget.textContent = current.slice(0, ci+1);
+      ci++;
+      if(ci === current.length){
+        deleting = true;
+        setTimeout(typeLoop, 1400);
+        return;
+      }
+    } else {
+      typeTarget.textContent = current.slice(0, ci-1);
+      ci--;
+      if(ci === 0){
+        deleting = false;
+        li = (li+1) % lines.length;
+      }
+    }
+    setTimeout(typeLoop, deleting ? 35 : 65);
+  }
+  typeLoop();
+</script>
+
+</body>
+</html>
